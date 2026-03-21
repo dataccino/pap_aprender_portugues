@@ -167,12 +167,12 @@ class TestGenerateStory:
     def test_live_path_uses_correct_model(self):
         client = _make_mock_client()
         generate_story(client, CHAPTER, GENRE, "A1/A2")
-        assert client.messages.create.call_args.kwargs["model"] == "claude-opus-4-5"
+        assert client.messages.create.call_args.kwargs["model"] == "claude-sonnet-4-6"
 
     def test_live_path_uses_correct_max_tokens(self):
         client = _make_mock_client()
         generate_story(client, CHAPTER, GENRE, "A1/A2")
-        assert client.messages.create.call_args.kwargs["max_tokens"] == 2000
+        assert client.messages.create.call_args.kwargs["max_tokens"] == 3000
 
     def test_live_path_passes_system_prompt(self):
         client = _make_mock_client()
