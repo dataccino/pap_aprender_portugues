@@ -1,101 +1,201 @@
 # Portuguese and Play — Story Generator
 
-Generates bilingual (PT/EN) short stories for each chapter of the A1/A2 and B1
-textbooks, cycling through 8 literary genres. Each story includes a full English
-translation, a line-by-line interleaved version, grammar notes, and genre notes.
-
-## Usage
-
-```bash
-python generate_stories.py                        # all chapters, both books
-python generate_stories.py --book a1a2            # A1/A2 book only
-python generate_stories.py --book b1              # B1 book only
-python generate_stories.py --chapter A1-1         # single chapter
-python generate_stories.py --dry-run              # print prompts, no API calls
-python generate_stories.py --prompts-only         # save prompts as .txt, no API calls
-python generate_stories.py --output ./my-stories  # custom output directory
-python generate_stories.py --delay 3.0            # seconds between API calls (default: 2)
-python generate_stories.py --chapter A1-1 --inspire "Ana finds a talking fish."
-python generate_stories.py --chapter A1-1 --inspire-file seed.txt
-```
-
-Requires an `ANTHROPIC_API_KEY` environment variable for live generation.
-
-## Output
-
-Stories are saved to `./stories/` (or `--output`) as markdown files with YAML
-frontmatter. A `INDEX.md` index and (in `--prompts-only` mode) an `ALL_PROMPTS.md`
-file are also written.
-
-## Genres
-
-Stories cycle through 8 genres in order: Absurdist Comedy, Rom-com, Magical
-Realism, Noir / Crime Thriller, Telenovela Drama, Fairy Tale / Fábula, Horror /
-Suspense, Epistolary.
+A CLI tool that generates bilingual (PT/EN) short stories for each chapter of your A1/A2 and B1 European Portuguese textbooks. Each story targets the chapter's grammar structures, is written in a specific literary genre, and outputs a formatted PDF plus structured markdown with a full Portuguese version, English version, line-by-line interleaved translation, grammar notes, and vocabulary and verb conjugation tables.
 
 ---
 
-## Tests
+## Setup
 
-Run the test suite with:
+**Requirements:** Python 3.8+
+
+**Install dependencies:**
 
 ```bash
-python3 -m pytest test_generate_stories.py -v
+pip install -r requirements.txt
 ```
 
-Tests also run automatically on every pull request via GitHub Actions.
+**Set your API key** (only needed if you're generating stories via the API — not required for `--prompts-only`):
 
-### What is tested
+```bash
+export ANTHROPIC_API_KEY="your-key-here"
+```
 
-#### `build_user_prompt` — 12 tests
-Verifies the prompt string sent to Claude is built correctly. Checks that the
-chapter ID, title, book level, grammar points, objectives, genre name, and genre
-description all appear in the output. Also tests the inspiration block: absent
-when the argument is empty or whitespace-only, present and stripped when provided.
+Add that line to your `~/.zshrc` or `~/.bashrc` to avoid setting it every session.
 
-#### `generate_story` — 14 tests
-Covers the three execution paths:
+---
 
-- **`dry_run=True`** — returns the raw prompt without calling the API and prints a
-  `DRY RUN` header to stdout
-- **`prompts_only=True`** — same return value, no API call, no "Generating…" output
-- **Live API path** — confirms the Anthropic client is called with the right model,
-  `max_tokens`, system prompt, and a correctly structured `messages` list; confirms
-  the return value is `message.content[0].text`
+## Quickstart
 
-Also checks that inspiration text flows through to the API payload in the live path.
+### Generate all stories (calls the API)
 
-#### `save_story` — 18 tests
-Checks files written to disk:
+```bash
+python3 generate_stories.py
+```
 
-- **Markdown mode** — correct filename and extension, frontmatter opens with `---`,
-  all fields (`chapter`, `title`, `genre`, `grammar`, `objectives`) present,
-  `grammar` and `objectives` are valid JSON, story content appears after frontmatter
-- **Prompts-only mode** — writes a `.txt` file containing the system prompt header,
-  system prompt body, user prompt header, and content in that order
-- **Filename sanitisation** — slashes in chapter IDs and genre names (e.g.
-  `"Noir / Crime Thriller"`) are replaced with dashes
-- **Encoding** — Portuguese characters survive a UTF-8 write/read roundtrip
+This generates 27 stories — 14 for A1/A2, 13 for B1 — and saves them as markdown and PDF files in `./outputs/`.
 
-#### `main` / CLI — 30 tests
-Integration-level tests that call `main()` with different `sys.argv` values:
+### Just export the prompts (no API key needed)
 
-- **Chapter counts** — `--book a1a2`, `--book b1`, and `--book both` produce the
-  right number of rows in `INDEX.md`; `--chapter` filters to exactly one
-- **Invalid chapter** — prints a "not found" message and exits before writing
-  `INDEX.md`
-- **Genre cycling** — genres assigned in order, wrap back to `GENRES[0]` after all
-  8 are used; a single filtered chapter always gets `GENRES[0]`
-- **`--inspire` / `--inspire-file`** — inspiration text passed through to
-  `generate_story`; missing file prints a warning; using `--inspire` without
-  `--chapter` prints a "best with --chapter" warning
-- **Output directory** — created automatically if it doesn't exist, including nested
-  paths
-- **`INDEX.md`** — always created, correct header row, file links use `.md` normally
-  and `.txt` in prompts-only mode
-- **`ALL_PROMPTS.md`** — created only in `--prompts-only` mode, contains the system
-  prompt and a section per chapter; absent in dry-run and API modes
-- **API mode** — `anthropic.Anthropic()` called exactly once; story file created;
-  `time.sleep` called between chapters (not after the last) and respects `--delay`
-- **Error handling** — an exception in one chapter is caught and the rest continue;
-  error summary is printed
+```bash
+python3 generate_stories.py --prompts-only
+```
+
+Saves each story prompt as a `.txt` file, plus a single `ALL_PROMPTS.md` with every prompt in sequence. Use this to paste prompts manually into Claude.ai, ChatGPT, or any other LLM.
+
+---
+
+## All Options
+
+| Flag | Description |
+|------|-------------|
+| `--book a1a2` | Only generate A1/A2 chapters (book 1) |
+| `--book b1` | Only generate B1 chapters (book 2) |
+| `--book both` | Both books — this is the default |
+| `--chapter ID` | Generate a single chapter, e.g. `--chapter A1-1` |
+| `--prompts-only` | Save prompts as `.txt` files, no API calls |
+| `--dry-run` | Print prompts to the terminal, no files saved, no API calls |
+| `--pdf` | Generate a PDF alongside each markdown file |
+| `--pdf-only` | Build PDFs from existing markdown files — no API calls |
+| `--inspire "TEXT"` | Provide a plot seed or inspiration for the story (see below) |
+| `--inspire-file FILE` | Same as `--inspire` but reads from a text file |
+| `--output DIR` | Output directory — defaults to `./outputs` |
+| `--delay SECONDS` | Pause between API calls — defaults to `2.0` |
+
+---
+
+## Chapter IDs
+
+Use these with `--chapter`:
+
+**A1/A2 (Book 1)**
+
+| ID | Title |
+|----|-------|
+| `A1-1` | Identificação e Dados Pessoais |
+| `A1-2` | Descrição de Objetos e Pessoas |
+| `A1-3` | Breves Fórmulas Sociais |
+| `A1-4` | Atividades do Quotidiano |
+| `A1-5` | Relações Familiares e Habitação |
+| `A2-6` | Compra e Venda |
+| `A2-7` | Localização de Objetos e Pessoas |
+| `A2-8` | Desporto e Tempos Livres |
+| `A2-9` | Saúde e Corpo |
+| `A2-10` | Serviços de Utilidade Pública |
+| `A2-11` | Relatar Acontecimentos Pontuais no Passado |
+| `A2-12` | Contactos Sociais e Formas de Tratamento |
+| `A2-13` | Reclamar e Fazer Reclamações sobre Comida e Alojamento |
+| `A2-14` | Memórias no Passado |
+
+**B1 (Book 2)**
+
+| ID | Title |
+|----|-------|
+| `B1-0` | Revisões (A2) |
+| `B1-1` | Falar de Atividades do Quotidiano no Passado |
+| `B1-2` | Exprimir Desejos e Fazer Planos |
+| `B1-3` | Falar de Tempos Livres no Passado |
+| `B1-4` | Relatos Formais de Ocorrências |
+| `B1-5` | Relações Sociais — Escrever Cartas, Notas e Bilhetes |
+| `B1-6` | Relatar Factos |
+| `B1-7` | Relações Sociais |
+| `B1-8` | Atualidades |
+| `B1-9` | Relações Sociais — Vida Privada e Tempos Livres |
+| `B1-10` | Viagens e Deslocações |
+| `B1-11` | Trabalho e Profissões |
+| `B1-12` | Argumentar e Negociar Propostas |
+
+---
+
+## Literary Genres
+
+Genres cycle across chapters in this order, repeating as needed:
+
+1. Absurdist Comedy
+2. Rom-com
+3. Magical Realism
+4. Noir / Crime Thriller
+5. Telenovela Drama
+6. Fairy Tale / Fábula
+7. Horror / Suspense
+8. Epistolary (letters, texts, diary entries)
+
+---
+
+## Story Output Format
+
+Each generated story produces a `.md` and a `.pdf` file. The content contains:
+
+- **🔀 Bilingual Story** — every sentence as an EN/PT pair, English first then Portuguese beneath
+- **📚 Grammar Notes** — each target grammar structure with an example sentence pulled directly from the story
+- **📖 Vocabulary** — key nouns/phrases table, plus a full conjugation table (Present / Past / Future × 6 persons) for each key verb
+
+---
+
+## Adding Story Inspiration
+
+Use `--inspire` to give the story a plot seed, character idea, or setting. This is optional and works best when generating a single chapter.
+
+**Inline:**
+```bash
+python3 generate_stories.py --chapter A1-1 \
+  --inspire "A woman tries to introduce herself at a party but keeps being interrupted by a fado singer."
+```
+
+**From a file** (better for longer plot notes):
+```bash
+python3 generate_stories.py --chapter B1-5 --inspire-file my_plot.txt
+```
+
+The inspiration is passed to the model as a starting point, not a strict constraint — it will adapt the idea to fit the genre and grammar targets.
+
+> **Note:** If you use `--inspire` without `--chapter`, the same inspiration will be applied to every chapter. The script will warn you when this happens.
+
+---
+
+## Typical Weekend Workflow
+
+**Step 1 — Export all prompts (no API key needed):**
+```bash
+python3 generate_stories.py --prompts-only
+```
+
+**Step 2 — Open `./outputs/ALL_PROMPTS.md`**
+
+Copy the system prompt once into your LLM of choice, then paste each chapter's user prompt one by one, saving the responses as `.md` files.
+
+**Step 3 — Or let the script call the API for you:**
+```bash
+python3 generate_stories.py
+```
+
+If you hit rate limits, increase the delay between calls:
+```bash
+python3 generate_stories.py --delay 5.0
+```
+
+**Step 4 — Preview a single chapter before committing to a full run:**
+```bash
+python3 generate_stories.py --chapter A1-1 --dry-run
+```
+
+---
+
+## Output Files
+
+After a full run, `./outputs/` will contain:
+
+```
+outputs/
+├── INDEX.md                          # table of all chapters, genres, and filenames
+├── A1-1_absurdist-comedy.md
+├── A1-1_absurdist-comedy.pdf
+├── A1-2_rom-com.md
+├── A1-2_rom-com.pdf
+├── A1-3_magical-realism.md
+├── A1-3_magical-realism.pdf
+├── ...
+├── B1-12_noir-crime-thriller.md
+└── B1-12_noir-crime-thriller.pdf
+```
+
+In `--prompts-only` mode, files are `.txt` instead of `.md`, an additional `ALL_PROMPTS.md` is written, and no PDFs are generated.
