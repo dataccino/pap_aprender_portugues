@@ -1,0 +1,101 @@
+# Portuguese and Play — Story Generator
+
+Generates bilingual (PT/EN) short stories for each chapter of the A1/A2 and B1
+textbooks, cycling through 8 literary genres. Each story includes a full English
+translation, a line-by-line interleaved version, grammar notes, and genre notes.
+
+## Usage
+
+```bash
+python generate_stories.py                        # all chapters, both books
+python generate_stories.py --book a1a2            # A1/A2 book only
+python generate_stories.py --book b1              # B1 book only
+python generate_stories.py --chapter A1-1         # single chapter
+python generate_stories.py --dry-run              # print prompts, no API calls
+python generate_stories.py --prompts-only         # save prompts as .txt, no API calls
+python generate_stories.py --output ./my-stories  # custom output directory
+python generate_stories.py --delay 3.0            # seconds between API calls (default: 2)
+python generate_stories.py --chapter A1-1 --inspire "Ana finds a talking fish."
+python generate_stories.py --chapter A1-1 --inspire-file seed.txt
+```
+
+Requires an `ANTHROPIC_API_KEY` environment variable for live generation.
+
+## Output
+
+Stories are saved to `./stories/` (or `--output`) as markdown files with YAML
+frontmatter. A `INDEX.md` index and (in `--prompts-only` mode) an `ALL_PROMPTS.md`
+file are also written.
+
+## Genres
+
+Stories cycle through 8 genres in order: Absurdist Comedy, Rom-com, Magical
+Realism, Noir / Crime Thriller, Telenovela Drama, Fairy Tale / Fábula, Horror /
+Suspense, Epistolary.
+
+---
+
+## Tests
+
+Run the test suite with:
+
+```bash
+python3 -m pytest test_generate_stories.py -v
+```
+
+Tests also run automatically on every pull request via GitHub Actions.
+
+### What is tested
+
+#### `build_user_prompt` — 12 tests
+Verifies the prompt string sent to Claude is built correctly. Checks that the
+chapter ID, title, book level, grammar points, objectives, genre name, and genre
+description all appear in the output. Also tests the inspiration block: absent
+when the argument is empty or whitespace-only, present and stripped when provided.
+
+#### `generate_story` — 14 tests
+Covers the three execution paths:
+
+- **`dry_run=True`** — returns the raw prompt without calling the API and prints a
+  `DRY RUN` header to stdout
+- **`prompts_only=True`** — same return value, no API call, no "Generating…" output
+- **Live API path** — confirms the Anthropic client is called with the right model,
+  `max_tokens`, system prompt, and a correctly structured `messages` list; confirms
+  the return value is `message.content[0].text`
+
+Also checks that inspiration text flows through to the API payload in the live path.
+
+#### `save_story` — 18 tests
+Checks files written to disk:
+
+- **Markdown mode** — correct filename and extension, frontmatter opens with `---`,
+  all fields (`chapter`, `title`, `genre`, `grammar`, `objectives`) present,
+  `grammar` and `objectives` are valid JSON, story content appears after frontmatter
+- **Prompts-only mode** — writes a `.txt` file containing the system prompt header,
+  system prompt body, user prompt header, and content in that order
+- **Filename sanitisation** — slashes in chapter IDs and genre names (e.g.
+  `"Noir / Crime Thriller"`) are replaced with dashes
+- **Encoding** — Portuguese characters survive a UTF-8 write/read roundtrip
+
+#### `main` / CLI — 30 tests
+Integration-level tests that call `main()` with different `sys.argv` values:
+
+- **Chapter counts** — `--book a1a2`, `--book b1`, and `--book both` produce the
+  right number of rows in `INDEX.md`; `--chapter` filters to exactly one
+- **Invalid chapter** — prints a "not found" message and exits before writing
+  `INDEX.md`
+- **Genre cycling** — genres assigned in order, wrap back to `GENRES[0]` after all
+  8 are used; a single filtered chapter always gets `GENRES[0]`
+- **`--inspire` / `--inspire-file`** — inspiration text passed through to
+  `generate_story`; missing file prints a warning; using `--inspire` without
+  `--chapter` prints a "best with --chapter" warning
+- **Output directory** — created automatically if it doesn't exist, including nested
+  paths
+- **`INDEX.md`** — always created, correct header row, file links use `.md` normally
+  and `.txt` in prompts-only mode
+- **`ALL_PROMPTS.md`** — created only in `--prompts-only` mode, contains the system
+  prompt and a section per chapter; absent in dry-run and API modes
+- **API mode** — `anthropic.Anthropic()` called exactly once; story file created;
+  `time.sleep` called between chapters (not after the last) and respects `--delay`
+- **Error handling** — an exception in one chapter is caught and the rest continue;
+  error summary is printed
