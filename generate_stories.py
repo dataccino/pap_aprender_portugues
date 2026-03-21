@@ -20,6 +20,13 @@ import re
 import time
 from pathlib import Path
 
+try:
+    import markdown as _md_lib
+    import weasyprint as _weasyprint
+    _PDF_AVAILABLE = True
+except ImportError:
+    _PDF_AVAILABLE = False
+
 # ---------------------------------------------------------------------------
 # CURRICULUM DATA
 # Extracted from your textbook indexes (images 1–4)
@@ -430,6 +437,151 @@ GENRES = [
 ]
 
 # ---------------------------------------------------------------------------
+# PDF GENERATION
+# ---------------------------------------------------------------------------
+
+_FONTS_DIR = Path(__file__).parent / "fonts"
+
+CSS = f"""
+* {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+@font-face {{
+    font-family: 'Inter';
+    font-weight: 400;
+    src: url('{_FONTS_DIR / "Inter-Regular.ttf"}') format('truetype');
+}}
+
+@font-face {{
+    font-family: 'Inter';
+    font-weight: 900;
+    src: url('{_FONTS_DIR / "Inter-Black.ttf"}') format('truetype');
+}}
+
+@page {{
+    size: A4;
+    margin: 3cm;
+}}
+
+body {{
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 10.5pt;
+    color: #2F4F4F;
+    background: white;
+    line-height: 1.65;
+}}
+
+h1 {{
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 900;
+    font-size: 22pt;
+    color: #2F4F4F;
+    text-align: center;
+    margin-top: 1cm;
+    margin-bottom: 0.3cm;
+}}
+
+h1 + h1 {{
+    font-size: 13pt;
+    color: #8B4513;
+    font-style: normal;
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom: 0.8cm;
+}}
+
+hr {{
+    border: none;
+    border-top: 1px solid #C8B89A;
+    width: 80%;
+    margin: 0 auto 1cm auto;
+}}
+
+p {{
+    font-size: 10.5pt;
+    color: #2F4F4F;
+    text-align: justify;
+    line-height: 1.7;
+    margin-bottom: 0.1cm;
+}}
+
+p em {{
+    font-style: italic;
+    color: #5A6B5A;
+}}
+
+p em:only-child {{
+    display: block;
+    font-size: 9.5pt;
+    padding-left: 0.8cm;
+    line-height: 1.6;
+    margin-bottom: 0.55cm;
+    margin-top: 0.1cm;
+}}
+
+h2 {{
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 900;
+    font-size: 10pt;
+    color: #8B4513;
+    margin-top: 1.2cm;
+    margin-bottom: 0.4cm;
+    padding-top: 0.6cm;
+    border-top: 0.5px solid #C8B89A;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}}
+
+p strong:only-child {{
+    color: #2F4F4F;
+    font-size: 9.5pt;
+    margin-top: 0.5cm;
+    margin-bottom: 0.2cm;
+}}
+
+table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.5cm;
+    font-size: 9.5pt;
+}}
+
+th, td {{
+    padding: 4px 6px;
+    border: 0.5px solid #C8B89A;
+    color: #2F4F4F;
+    text-align: left;
+    vertical-align: top;
+}}
+
+tr:nth-child(odd)  {{ background-color: #F5F0E8; }}
+tr:nth-child(even) {{ background-color: white; }}
+"""
+
+HTML_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<style>{css}</style>
+</head>
+<body>
+{body}
+</body>
+</html>"""
+
+
+def build_pdf(content: str, output_path: str):
+    if not _PDF_AVAILABLE:
+        print("  ⚠ PDF skipped — install dependencies: pip install weasyprint markdown")
+        return
+    html_body = _md_lib.markdown(content, extensions=["tables"])
+    full_html = HTML_TEMPLATE.format(css=CSS, body=html_body)
+    _weasyprint.HTML(string=full_html).write_pdf(output_path)
+    print(f"  ✓ PDF → {output_path}")
+
+
+# ---------------------------------------------------------------------------
 # PROMPT TEMPLATE
 # ---------------------------------------------------------------------------
 
@@ -450,42 +602,30 @@ it deepens it. The funniest horror is still frightening. The funniest noir is st
 Think Saramago's deadpan, Agustina's mischief, or the way Portuguese people find the ridiculous
 inside the tragic. The humour should feel inevitable, not bolted on.
 
-Output format — STRICT MARKDOWN:
+Output format — STRICT MARKDOWN. Do not use emojis anywhere in the output:
 
 # [Story Title in Portuguese]
 ### *[Subtitle/genre tag in italics]*
 
 ---
 
-## 🇵🇹 Versão Portuguesa
+## Bilingual Story
 
-[Full story in European Portuguese, ~300-400 words]
-
----
-
-## 🇬🇧 English Version
-
-[Full story in English, same ~300-400 words — faithful translation, not a simplified version]
-
----
-
-## 🔀 Line by Line
-
-Render the story sentence by sentence, English first then Portuguese beneath it.
+Write the story sentence by sentence, English first then Portuguese beneath it.
 Use this exact format for every sentence — no blank lines within a pair, one blank line between pairs:
 
-*[English sentence.]*
-[Frase em português.]
+[English sentence.]
+*[Frase em português.]*
 
-*[Next English sentence.]*
-[Próxima frase em português.]
+[Next English sentence.]
+*[Próxima frase em português.]*
 
-Every sentence from the story must appear here. Do not skip, summarise, or merge sentences.
-Dialogue lines count as individual sentences.
+Every sentence must appear as a pair. Do not skip, summarise, or merge sentences.
+Dialogue lines count as individual sentences. Aim for ~300–400 words in Portuguese.
 
 ---
 
-## 📚 Grammar Notes
+## Grammar Notes
 
 **Target structures used in this story:**
 
@@ -499,10 +639,32 @@ Example format:
 
 ---
 
-## 🎭 Genre Notes
+## Vocabulary
 
-One short paragraph (3-5 sentences) explaining which genre conventions you used and why, 
-so the teacher (Astrid) can brief participants before reading."""
+**Nouns**
+
+List 10–15 key nouns, phrases, and expressions from the story as a markdown table:
+
+| Portuguese | English |
+|---|---|
+| [word or phrase] | [translation] |
+
+---
+
+**Verbs**
+
+For each key verb used in the story (aim for 5–8 verbs), use this exact format — the verb name and its gloss must be on a single inline line:
+
+***ter*** — *to have (irregular)*
+
+| Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
+|---|---|---|---|---|---|
+| Present | ... | ... | ... | ... | ... |
+| Past | ... | ... | ... | ... | ... |
+| Future | ... | ... | ... | ... | ... |
+
+Separate each verb table with a horizontal rule (`---`). Prioritise irregular verbs and the chapter's target grammar structures.
+"""
 
 def build_user_prompt(chapter: dict, genre: dict, book_level: str, inspiration: str = "") -> str:
     grammar_list = "\n".join(f"  - {g}" for g in chapter["grammar"])
@@ -555,8 +717,8 @@ def generate_story(client, chapter: dict, genre: dict, book_level: str, dry_run:
     print(f"  Generating {chapter['id']} — {chapter['title']} [{genre['name']}]...", end="", flush=True)
 
     message = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=2000,
+        model="claude-sonnet-4-6",
+        max_tokens=3000,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
     )
@@ -590,6 +752,29 @@ def save_story(content: str, chapter: dict, genre: dict, output_dir: Path, promp
     return filepath
 
 
+def build_pdfs_from_dir(output_dir: Path, chapter_id: str = None):
+    """Build PDFs from existing markdown files in output_dir."""
+    if chapter_id:
+        md_files = sorted(output_dir.glob(f"{chapter_id.replace('/', '-')}_*.md"))
+    else:
+        md_files = sorted(
+            f for f in output_dir.glob("*.md")
+            if f.name not in ("INDEX.md", "ALL_PROMPTS.md")
+        )
+
+    if not md_files:
+        print("No markdown files found to convert.")
+        return
+
+    print(f"Building PDFs for {len(md_files)} file(s)...")
+    for md_path in md_files:
+        text = md_path.read_text(encoding="utf-8")
+        # Strip YAML frontmatter
+        content = re.sub(r"^---.*?---\n\n", "", text, flags=re.DOTALL)
+        pdf_path = md_path.with_suffix(".pdf")
+        build_pdf(content, str(pdf_path))
+
+
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
@@ -600,7 +785,9 @@ def main():
     parser.add_argument("--chapter", help="Generate a single chapter by ID (e.g. A1-1)")
     parser.add_argument("--dry-run", action="store_true", help="Print prompts to terminal, no API calls")
     parser.add_argument("--prompts-only", action="store_true", help="Save prompts as .txt files — no API calls")
-    parser.add_argument("--output", default="./stories", help="Output directory (default: ./stories)")
+    parser.add_argument("--output", default="./outputs", help="Output directory (default: ./outputs)")
+    parser.add_argument("--pdf", action="store_true", help="Generate PDFs alongside markdown files")
+    parser.add_argument("--pdf-only", action="store_true", help="Build PDFs from existing markdown files, no API calls")
     parser.add_argument("--delay", type=float, default=2.0, help="Seconds between API calls")
     parser.add_argument("--inspire", metavar="TEXT",
                         help="Optional story inspiration (plot seed, characters, setting). "
@@ -611,6 +798,12 @@ def main():
     args = parser.parse_args()
 
     prompts_only = args.prompts_only
+
+    # PDF-only mode: build PDFs from existing markdown, no API calls
+    if args.pdf_only:
+        output_dir = Path(args.output)
+        build_pdfs_from_dir(output_dir, chapter_id=args.chapter)
+        return
 
     # Load inspiration text (inline string or file)
     inspiration = ""
@@ -663,6 +856,8 @@ def main():
             if prompts_only:
                 print(f"  Saved: {chapter['id']} — {chapter['title']} [{genre['name']}]")
             filepath = save_story(content, chapter, genre, output_dir, prompts_only)
+            if args.pdf and not prompts_only:
+                build_pdf(content, str(filepath.with_suffix(".pdf")))
             generated.append(filepath)
 
             if not args.dry_run and not prompts_only and i < len(chapters_with_genres) - 1:
