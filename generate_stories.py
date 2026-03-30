@@ -752,6 +752,49 @@ def save_story(content: str, chapter: dict, genre: dict, output_dir: Path, promp
     return filepath
 
 
+def parse_prompt_file(path: Path) -> tuple[str, str]:
+    """Parse a .txt prompt file into (system_prompt, user_prompt)."""
+    text = path.read_text(encoding="utf-8")
+    user_marker = "=== USER PROMPT ==="
+    if user_marker not in text:
+        raise ValueError(f"Could not find '{user_marker}' in {path}")
+    _, user_part = text.split(user_marker, 1)
+    user_prompt = user_part.lstrip("\n")
+
+    system_marker = "=== SYSTEM PROMPT ==="
+    sep_marker = "=" * 60
+    if system_marker in text:
+        after_system = text.split(system_marker, 1)[1].lstrip("\n")
+        system_prompt = after_system.split(sep_marker)[0].rstrip("\n")
+    else:
+        system_prompt = SYSTEM_PROMPT
+
+    return system_prompt, user_prompt
+
+
+def generate_from_file(client, txt_path: Path, output_dir: Path, pdf: bool = False):
+    """Generate a story from an edited .txt prompt file."""
+    system_prompt, user_prompt = parse_prompt_file(txt_path)
+
+    print(f"  Generating from {txt_path.name}...", end="", flush=True)
+    message = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=3000,
+        system=system_prompt,
+        messages=[{"role": "user", "content": user_prompt}],
+    )
+    content = message.content[0].text
+    print(" ✓")
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    md_path = output_dir / txt_path.with_suffix(".md").name
+    md_path.write_text(content, encoding="utf-8")
+    print(f"  ✓ Saved → {md_path}")
+
+    if pdf:
+        build_pdf(content, str(md_path.with_suffix(".pdf")))
+
+
 def build_pdfs_from_dir(output_dir: Path, chapter_id: str = None):
     """Build PDFs from existing markdown files in output_dir."""
     if chapter_id:
@@ -795,9 +838,22 @@ def main():
     parser.add_argument("--inspire-file", metavar="FILE",
                         help="Read story inspiration from a text file. "
                              "Only meaningful with --chapter.")
+    parser.add_argument("--from-file", metavar="FILE",
+                        help="Generate a story directly from an edited .txt prompt file, "
+                             "bypassing chapter data. Output saved as .md in --output dir.")
     args = parser.parse_args()
 
     prompts_only = args.prompts_only
+
+    # From-file mode: generate from an edited .txt prompt file
+    if args.from_file:
+        txt_path = Path(args.from_file)
+        if not txt_path.exists():
+            print(f"⚠️  File not found: {txt_path}")
+            return
+        client = anthropic.Anthropic()
+        generate_from_file(client, txt_path, Path(args.output), pdf=args.pdf)
+        return
 
     # PDF-only mode: build PDFs from existing markdown, no API calls
     if args.pdf_only:
