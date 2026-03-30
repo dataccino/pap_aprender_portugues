@@ -36,7 +36,7 @@ Use this exact format for every sentence — no blank lines within a pair, one b
 *[Próxima frase em português.]*
 
 Every sentence must appear as a pair. Do not skip, summarise, or merge sentences.
-Dialogue lines count as individual sentences. Aim for ~300–400 words in Portuguese.
+Dialogue lines count as individual sentences. Aim for ~700 words in Portuguese.
 
 ---
 
@@ -95,6 +95,8 @@ Write a story for this chapter:
 
 **Learning objectives (what participants should be able to do after):**
   - Caracterizar-se a si e ao outro
+  - learning about the body, words for woman's sexual organs
+  - learning about sex toys
 
 **Literary genre:** Rom-com
 **Genre guidance:** Warm, witty romantic comedy. Misunderstandings, meet-cutes, near-misses. Characters are charming and slightly ridiculous. Happy or hopeful ending. Set in Lisbon or another Portuguese-speaking city.
@@ -106,5 +108,5 @@ Remember:
 - Use the grammar structures NATURALLY within the story — do not force or highlight them
 - Commit fully to the genre — it should feel like a real example of that genre, not a parody
 - European Portuguese only (not Brazilian) — use vocabulary, spelling, and register appropriate for Portugal
-- Keep Portuguese version 300-400 words
+- Keep Portuguese version 700 words
 - Grammar notes should reference actual sentences from your story

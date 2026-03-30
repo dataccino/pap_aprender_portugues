@@ -3,7 +3,7 @@ chapter: A1-2
 title: Descrição de Objetos e Pessoas
 genre: Rom-com
 grammar: ["Verbos ter, ser/estar + adjetivo, verbos regulares em -er e -ir — Presente do Indicativo", "Nomes/adjetivos: concordância em género e número"]
-objectives: ["Caracterizar-se a si e ao outro"]
+objectives: ["Caracterizar-se a si e ao outro", "learning about the body, words for woman's sexual organs", "learning about sex toys"]
 ---
 
 # O Escolhido
@@ -17,92 +17,158 @@ objectives: ["Caracterizar-se a si e ao outro"]
 I live in a drawer in Lisbon, in a flat on Rua do Século, third floor, on the left.
 *Vivo numa gaveta em Lisboa, num apartamento na Rua do Século, terceiro andar, à esquerda.*
 
-I am small, pink, and made of silicone.
-*Sou pequeno, cor-de-rosa, e feito de silicone.*
+I am small, pink, and made of soft medical silicone.
+*Sou pequeno, cor-de-rosa, e feito de silicone médico suave.*
 
-I have a round base, a tapered tip, and — it must be said — a great deal of hope.
-*Tenho uma base redonda, uma ponta afilada, e — é preciso dizer — muita esperança.*
+I have a wide base for safety, a delicate tip, and — I must be honest — a great deal of accumulated hope.
+*Tenho uma base larga para maior segurança, uma ponta delicada, e — devo ser honesto — muita esperança acumulada.*
 
-The others in the drawer are larger than me.
-*Os outros na gaveta são maiores do que eu.*
+My purpose, when they finally call for me, is to provide anal pleasure.
+*O meu propósito, quando finalmente me chamarem, é proporcionar prazer anal.*
 
-Next to me lives the Big Vibe — he is tall, blue, and extremely sure of himself.
-*Ao meu lado vive o Vibrador Grande — é alto, azul, e muito seguro de si.*
+I am specialised in the anus and the perineum — two zones of the human body rich in nerve endings and chronically undervalued.
+*Estou especializado no ânus e no períneo — duas zonas do corpo humano ricas em terminações nervosas e cronicamente subvalorizadas.*
 
-He has three speeds and a proud expression.
-*Ele tem três velocidades e uma expressão orgulhosa.*
+There exist parts of the body that go undiscovered for years.
+*Existem partes do corpo que ficam por descobrir durante anos.*
 
-On the other side is the Massager — she is elegant, white, and always freshly charged.
-*Do outro lado está a Massajadora — é elegante, branca, e está sempre com a bateria cheia.*
+I am the only anal plug in this drawer.
+*Sou o único plug anal nesta gaveta.*
 
-I, on the other hand, am still in the original packaging.
-*Eu, por outro lado, estou ainda na embalagem original.*
+The other inhabitants are: the Big Vibe, the Massager, and a small vibrating bullet called the Bolinha, who has spent the last two years without batteries.
+*Os outros habitantes são: o Vibrador Grande, a Massajadora, e uma pequena bala vibratória chamada a Bolinha, que passou os últimos dois anos sem pilhas.*
+
+The Big Vibe is twenty-five centimetres, dark blue, and has seven vibration modes.
+*O Vibrador Grande tem vinte e cinco centímetros, é azul-escuro, e possui sete modos de vibração.*
+
+He is designed for vaginal penetration and is very aware of his dimensions.
+*Destina-se à penetração vaginal e é muito ciente das suas dimensões.*
+
+He has the personality of someone who has never waited for anything.
+*Ele tem a personalidade de alguém que nunca ficou à espera de nada.*
+
+The Massager is a different story.
+*A Massajadora é outra história.*
+
+She is elegant, white, and specialised in the stimulation of the clitoris and the external labia.
+*É elegante, branca, e especializada na estimulação do clítoris e dos lábios externos.*
+
+She has a curved shape and an expression of calm superiority.
+*Tem uma forma arqueada e uma expressão de superioridade tranquila.*
+
+And then there is me.
+*E depois estou eu.*
+
+Still in the original packaging, with the plastic sealed and the instructions folded neatly inside.
+*Ainda na embalagem original, com o plástico selado e as instruções dobradas cuidadosamente lá dentro.*
 
 Every night at around eleven, Sofia opens the drawer.
 *Todas as noites, por volta das onze, a Sofia abre a gaveta.*
 
-She stands in her pyjamas and looks at us with serious, thoughtful eyes.
-*Ela fica de pijama e olha para nós com olhos sérios e pensativos.*
+She studies us with the focused look of someone choosing fruit at the market.
+*Estuda-nos com aquele olhar concentrado de quem escolhe fruta no mercado.*
 
-My heart beats fast — perhaps tonight is my night.
-*O meu coração bate depressa — talvez esta noite seja a minha noite.*
+My heart — metaphorical, since I am an inanimate silicone object — speeds up.
+*O meu coração — metafórico, pois sou um objeto inanimado de silicone — acelera.*
 
-But her hand always moves to the left.
-*Mas a mão dela move-se sempre para a esquerda.*
+Tonight. Tonight, she will remember that there is a whole dimension of pleasure she has not yet explored.
+*Esta noite. Esta noite, ela vai lembrar-se de que existe uma dimensão inteira do prazer que ainda não explorou.*
 
-"The Big Vibe is perfect," she says, to no one in particular.
-*"O Vibrador Grande é perfeito," diz ela, para ninguém em especial.*
+But no.
+*Mas não.*
+
+Her hand always moves to the left, towards the Big Vibe or the Massager.
+*A mão dela move-se sempre para a esquerda, em direção ao Vibrador Grande ou à Massajadora.*
+
+"The Big Vibe is perfect for tonight," she says, in the calm voice of someone who has already decided.
+*"O Vibrador Grande é perfeito para esta noite," diz ela, com aquela voz calma de quem já tomou uma decisão.*
 
 I remain at the back, dignified.
 *Eu fico no fundo, com dignidade.*
 
-Weeks pass.
-*Passam semanas.*
+Weeks pass. Then months.
+*Passam semanas. Depois, meses.*
 
-Then months.
-*Depois, meses.*
+The Massager becomes the undisputed favourite.
+*A Massajadora torna-se a favorita inequívoca.*
 
-The Massager now receives all the attention — Sofia says she is quiet and discreet.
-*A Massajadora recebe toda a atenção agora — a Sofia diz que ela é silenciosa e discreta.*
+One afternoon, I hear Sofia on the phone with a friend.
+*Numa tarde, ouço a Sofia ao telefone com uma amiga.*
 
-I am also discreet, I think.
-*Eu também sou discreto, penso eu.*
+"Clitoral stimulation is completely different from vaginal penetration," she explains. "Different nerves, different sensations."
+*"A estimulação do clítoris é completamente diferente da penetração vaginal," explica ela. "São nervos diferentes, sensações diferentes."*
 
-Very discreet.
-*Muito discreto.*
+"And anal pleasure?" asks the friend, loud enough for me to hear.
+*"E o prazer anal?" pergunta a amiga, com a voz suficientemente alta para eu ouvir.*
 
-Still in the packaging, it is true, but discretion is not something one needs to advertise.
-*Ainda na embalagem, é verdade, mas a discrição não é algo que se precise de anunciar.*
+There is a pause.
+*Há uma pausa.*
 
-One Saturday evening in January, Sofia opens the drawer and stops.
-*Numa tarde de sábado de janeiro, a Sofia abre a gaveta e para.*
+"I've never tried it," says Sofia.
+*"Nunca experimentei," diz a Sofia.*
 
-She does not reach for the Big Vibe.
-*Ela não pega no Vibrador Grande.*
+I look at the ceiling of the drawer.
+*Eu olho para o teto da gaveta.*
 
-She does not look at the Massager.
-*Ela não olha para a Massajadora.*
+She has never tried it. I have been here for eight months.
+*Nunca experimentou. Estou aqui há oito meses.*
 
-Her eyes move to the back of the drawer, to a small pink shape still inside its box.
-*Os seus olhos movem-se para o fundo da gaveta, para uma forma cor-de-rosa pequena ainda dentro da caixa.*
+In October, Sofia buys a book about the female body and pleasure.
+*Em outubro, a Sofia compra um livro sobre o corpo feminino e o prazer.*
 
-She picks up the box.
-*Ela pega na caixa.*
+She reads it in four days, with a yellow bookmark.
+*Ela lê-o em quatro dias, com um marcador de páginas amarelo.*
 
-She reads the label slowly, as if seeing it for the first time.
-*Ela lê o rótulo devagar, como se o visse pela primeira vez.*
+I observe from the back of the drawer. My optimism, which had been sleeping, wakes up.
+*Eu observo do fundo da gaveta. O otimismo, que tinha adormecido, acorda.*
 
-"Oh," she says softly.
-*"Oh," diz ela, em voz baixa.*
+On a Friday in November, Sofia opens the drawer and stops.
+*Numa sexta-feira de novembro, a Sofia abre a gaveta e para.*
 
-I am small, pink, and still technically in my original packaging.
-*Sou pequeno, cor-de-rosa, e ainda tecnicamente na embalagem original.*
+She does not go directly to the left.
+*Não vai diretamente para a esquerda.*
 
-But tonight, she opens the box.
-*Mas esta noite, ela abre a caixa.*
+She looks at all of us with an attention I have never seen before.
+*Olha para nós todos com uma atenção que nunca tinha visto antes.*
 
-And I — at last — am the chosen one.
-*E eu — finalmente — sou o escolhido.*
+Her eyes travel over the Big Vibe — too familiar.
+*Os seus olhos percorrem o Vibrador Grande — demasiado familiar.*
+
+They travel over the Massager — excellent, but limited to the vulva and clitoris.
+*Percorrem a Massajadora — excelente, mas limitada à vulva e ao clítoris.*
+
+And then they reach the back of the drawer. To the still-sealed pink packaging.
+*E então chegam ao fundo da gaveta. À embalagem cor-de-rosa ainda selada.*
+
+Sofia picks me up. She turns the packaging over in her hands.
+*A Sofia pega em mim. Vira a embalagem nas mãos.*
+
+She reads aloud: "Anal plug in medical silicone. For anal and perineal stimulation. Wide base for greater safety."
+*Lê em voz alta: "Plug anal em silicone médico. Para estimulação anal e do períneo. Base larga para maior segurança."*
+
+She smiles a little.
+*Ela sorri um pouco.*
+
+"Oh," she says. "Of course."
+*"Ah," diz ela. "Claro."*
+
+After eight months of silence, of nights observed from the back of a drawer, of hearing the Big Vibe and the Massager receive all the attention — my turn has come.
+*Depois de oito meses de silêncio, de noites observadas do fundo de uma gaveta, de ouvir o Vibrador Grande e a Massajadora receberem toda a atenção — chegou a minha vez.*
+
+I am small, pink, and made of soft medical silicone.
+*Sou pequeno, cor-de-rosa, e feito de silicone médico suave.*
+
+I have a wide base, a delicate tip, and — finally — a destination.
+*Tenho uma base larga, uma ponta delicada, e — finalmente — um destino.*
+
+Sofia opens the packaging carefully. She takes out the instructions and reads them.
+*A Sofia abre a embalagem com cuidado. Retira as instruções e lê-as.*
+
+She goes to the bathroom to fetch the lubricant from the top shelf.
+*Vai à casa de banho buscar o lubrificante que está na prateleira de cima.*
+
+And I — after months of silent waiting in a Lisbon flat — am, at last, the chosen one.
+*E eu — depois de meses de espera silenciosa num apartamento de Lisboa — sou, por fim, o escolhido.*
 
 ---
 
@@ -110,35 +176,47 @@ And I — at last — am the chosen one.
 
 **Target structures used in this story:**
 
-- **Ser + adjetivo**: *"Sou pequeno, cor-de-rosa, e feito de silicone"* — used to describe permanent or inherent characteristics of a person or object; adjectives agree in gender and number with the subject
-- **Ter + noun**: *"Tenho uma base redonda, uma ponta afilada, e muita esperança"* — used to express possession or physical features; the noun phrase that follows agrees internally in gender and number
-- **Estar + adjectivo/particípio**: *"estou ainda na embalagem original"* — used for states or conditions that may change, contrasting with the permanence of *ser*
-- **Verbos regulares em -er (receber, viver)**: *"A Massajadora recebe toda a atenção agora"* — regular -er verbs follow a predictable present-tense conjugation: -o, -es, -e, -emos, -em
-- **Concordância em género e número**: *"é elegante, branca, e está sempre com a bateria cheia"* — adjectives must agree with the noun they modify; *elegante* is invariable, but *branca* and *cheia* take the feminine form to agree with *a Massajadora*
+- **Ser + adjetivo**: *"Sou pequeno, cor-de-rosa, e feito de silicone médico suave"* — used to describe permanent or inherent characteristics; adjectives agree in gender and number with the subject (*pequeno*, masculine singular)
+- **Ter + nome**: *"Tenho uma base larga para maior segurança, uma ponta delicada"* — used to express possession or physical features; the noun phrase agrees internally (*uma base larga* — feminine singular)
+- **Estar + adjetivo/particípio**: *"Estou especializado no ânus e no períneo"* — used for states or conditions that may change, contrasting with the permanence of *ser*
+- **Verbos regulares em -er (receber, percorrer)**: *"Os seus olhos percorrem o Vibrador Grande"* — regular -er verbs follow the pattern: -o, -es, -e, -emos, -em
+- **Verbos regulares em -ir (existir)**: *"Existem partes do corpo que ficam por descobrir durante anos"* — regular -ir verbs follow the pattern: -o, -es, -e, -imos, -em
+- **Concordância em género e número**: *"É elegante, branca, e especializada na estimulação do clítoris"* — adjectives agree with the noun they modify; *elegante* is invariable, but *branca* and *especializada* take feminine forms to agree with *a Massajadora*
 
 ---
 
 ## Vocabulary
 
-**Nouns**
+**Body and anatomy**
 
 | Portuguese | English |
 |---|---|
-| a gaveta | the drawer |
-| a esperança | hope |
+| o ânus | the anus |
+| o períneo | the perineum |
+| o clítoris | the clitoris |
+| a vagina | the vagina |
+| os lábios externos | the external labia |
+| a vulva | the vulva |
+| as terminações nervosas | the nerve endings |
+| o prazer anal | anal pleasure |
+| o prazer vaginal | vaginal pleasure |
+| a estimulação | stimulation |
+| a penetração vaginal | vaginal penetration |
+
+**Sex toys and related**
+
+| Portuguese | English |
+|---|---|
+| o plug anal | the butt plug |
+| o vibrador | the vibrator |
+| a massajadora | the massager |
+| a bala vibratória | the vibrating bullet |
+| o lubrificante | the lubricant |
+| o silicone médico | medical silicone |
+| a embalagem | the packaging |
 | a base | the base |
 | a ponta | the tip |
-| a embalagem | the packaging |
-| o coração | the heart |
-| a bateria | the battery |
-| a atenção | the attention |
-| a dignidade | dignity |
-| a discrição | discretion |
-| os dedos | the fingers |
-| a vez | the turn / the time |
-| o fundo | the back / the bottom |
-| o rótulo | the label |
-| a caixa | the box |
+| os modos de vibração | the vibration modes |
 
 ---
 
@@ -174,6 +252,26 @@ And I — at last — am the chosen one.
 
 ---
 
+***percorrer*** — *to travel across / to scan (regular -er verb)*
+
+| Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
+|---|---|---|---|---|---|
+| Present | percorro | percorres | percorre | percorremos | percorrem |
+| Past | percorri | percorreste | percorreu | percorremos | percorreram |
+| Future | percorrerei | percorrerás | percorrerá | percorreremos | percorrerão |
+
+---
+
+***existir*** — *to exist (regular -ir verb)*
+
+| Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
+|---|---|---|---|---|---|
+| Present | existo | existes | existe | existimos | existem |
+| Past | existi | exististe | existiu | existimos | existiram |
+| Future | existirei | existirás | existirá | existiremos | existirão |
+
+---
+
 ***receber*** — *to receive (regular -er verb)*
 
 | Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
@@ -181,23 +279,3 @@ And I — at last — am the chosen one.
 | Present | recebo | recebes | recebe | recebemos | recebem |
 | Past | recebi | recebeste | recebeu | recebemos | receberam |
 | Future | receberei | receberás | receberá | receberemos | receberão |
-
----
-
-***viver*** — *to live (regular -er verb)*
-
-| Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
-|---|---|---|---|---|---|
-| Present | vivo | vives | vive | vivemos | vivem |
-| Past | vivi | viveste | viveu | vivemos | viveram |
-| Future | viverei | viverás | viverá | viveremos | viverão |
-
----
-
-***olhar*** — *to look (regular -ar verb)*
-
-| Tense | Eu | Tu | Ele/Ela | Nós | Eles/Elas |
-|---|---|---|---|---|---|
-| Present | olho | olhas | olha | olhamos | olham |
-| Past | olhei | olhaste | olhou | olhámos | olharam |
-| Future | olharei | olharás | olhará | olharemos | olharão |
