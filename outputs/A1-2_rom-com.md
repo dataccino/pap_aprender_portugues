@@ -26,13 +26,13 @@ I have a round base, a tapered tip, and — it must be said — a great deal of 
 The others in the drawer are larger than me.
 *Os outros na gaveta são maiores do que eu.*
 
-Next to me lives the Vibrador Grande — he is tall, blue, and extremely sure of himself.
+Next to me lives the Big Vibe — he is tall, blue, and extremely sure of himself.
 *Ao meu lado vive o Vibrador Grande — é alto, azul, e muito seguro de si.*
 
 He has three speeds and a proud expression.
 *Ele tem três velocidades e uma expressão orgulhosa.*
 
-On the other side is the Massajadora — she is elegant, white, and always freshly charged.
+On the other side is the Massager — she is elegant, white, and always freshly charged.
 *Do outro lado está a Massajadora — é elegante, branca, e está sempre com a bateria cheia.*
 
 I, on the other hand, am still in the original packaging.
@@ -50,7 +50,7 @@ My heart beats fast — perhaps tonight is my night.
 But her hand always moves to the left.
 *Mas a mão dela move-se sempre para a esquerda.*
 
-"The Vibrador Grande is perfect," she says, to no one in particular.
+"The Big Vibe is perfect," she says, to no one in particular.
 *"O Vibrador Grande é perfeito," diz ela, para ninguém em especial.*
 
 I remain at the back, dignified.
@@ -62,7 +62,7 @@ Weeks pass.
 Then months.
 *Depois, meses.*
 
-The Massajadora now receives all the attention — Sofia says she is quiet and discreet.
+The Massager now receives all the attention — Sofia says she is quiet and discreet.
 *A Massajadora recebe toda a atenção agora — a Sofia diz que ela é silenciosa e discreta.*
 
 I am also discreet, I think.
@@ -77,10 +77,10 @@ Still in the packaging, it is true, but discretion is not something one needs to
 One Saturday evening in January, Sofia opens the drawer and stops.
 *Numa tarde de sábado de janeiro, a Sofia abre a gaveta e para.*
 
-She does not reach for the Vibrador Grande.
+She does not reach for the Big Vibe.
 *Ela não pega no Vibrador Grande.*
 
-She does not look at the Massajadora.
+She does not look at the Massager.
 *Ela não olha para a Massajadora.*
 
 Her eyes move to the back of the drawer, to a small pink shape still inside its box.
