@@ -58,6 +58,7 @@ Saves each story prompt as a `.txt` file, plus a single `ALL_PROMPTS.md` with ev
 | `--pdf-only` | Build PDFs from existing markdown files — no API calls |
 | `--inspire "TEXT"` | Provide a plot seed or inspiration for the story (see below) |
 | `--inspire-file FILE` | Same as `--inspire` but reads from a text file |
+| `--from-file FILE` | Generate a story from an edited `.txt` prompt file (see below) |
 | `--output DIR` | Output directory — defaults to `./outputs` |
 | `--delay SECONDS` | Pause between API calls — defaults to `2.0` |
 
@@ -149,6 +150,29 @@ python3 generate_stories.py --chapter B1-5 --inspire-file my_plot.txt
 The inspiration is passed to the model as a starting point, not a strict constraint — it will adapt the idea to fit the genre and grammar targets.
 
 > **Note:** If you use `--inspire` without `--chapter`, the same inspiration will be applied to every chapter. The script will warn you when this happens.
+
+---
+
+## Editing and Regenerating a Story
+
+If you want to tweak the prompt for a specific story before generating it, use `--prompts-only` to save the prompt as a `.txt` file, edit it, then pass it back with `--from-file`.
+
+**Step 1 — Save the prompt:**
+```bash
+python3 generate_stories.py --chapter A1-1 --prompts-only
+# writes stories/A1-1_absurdist-comedy.txt
+```
+
+**Step 2 — Edit the `.txt` file directly** (change the genre guidance, add constraints, etc.)
+
+**Step 3 — Regenerate from the edited file:**
+```bash
+python3 generate_stories.py --from-file stories/A1-1_absurdist-comedy.txt
+```
+
+The output `.md` is saved with the same stem as the `.txt` file into `--output` (default `./outputs`). Add `--pdf` to also generate a PDF.
+
+> **Note:** `--from-file` bypasses chapter data entirely — exactly what's in the file is sent to the model.
 
 ---
 
