@@ -19,8 +19,10 @@ from generate_stories import (
     GENRES,
     SYSTEM_PROMPT,
     build_user_prompt,
+    generate_from_file,
     generate_story,
     main,
+    parse_prompt_file,
     save_story,
 )
 
@@ -558,3 +560,141 @@ class TestMain:
             main()
         out = capsys.readouterr().out
         assert "error" in out.lower() or "✗" in out or "Error" in out
+
+
+# ---------------------------------------------------------------------------
+# 5. parse_prompt_file
+# ---------------------------------------------------------------------------
+
+def _make_txt_file(tmp_path: Path, system: str = "SYS", user: str = "USR") -> Path:
+    sep = "=" * 60
+    content = f"=== SYSTEM PROMPT ===\n\n{system}\n\n{sep}\n=== USER PROMPT ===\n\n{user}"
+    p = tmp_path / "A1-1_absurdist-comedy.txt"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+class TestParsePromptFile:
+    def test_parses_user_prompt(self, tmp_path):
+        p = _make_txt_file(tmp_path, user="Write a story about a cat.")
+        _, user = parse_prompt_file(p)
+        assert "Write a story about a cat." in user
+
+    def test_parses_system_prompt(self, tmp_path):
+        p = _make_txt_file(tmp_path, system="You are a helpful writer.")
+        sys_p, _ = parse_prompt_file(p)
+        assert "You are a helpful writer." in sys_p
+
+    def test_falls_back_to_system_prompt_constant_when_missing(self, tmp_path):
+        p = tmp_path / "minimal.txt"
+        p.write_text("=== USER PROMPT ===\n\nJust the user prompt.", encoding="utf-8")
+        sys_p, _ = parse_prompt_file(p)
+        assert sys_p == SYSTEM_PROMPT
+
+    def test_raises_when_user_marker_missing(self, tmp_path):
+        p = tmp_path / "bad.txt"
+        p.write_text("No markers here at all.", encoding="utf-8")
+        with pytest.raises(ValueError):
+            parse_prompt_file(p)
+
+    def test_user_prompt_does_not_include_marker_text(self, tmp_path):
+        p = _make_txt_file(tmp_path, user="My user prompt.")
+        _, user = parse_prompt_file(p)
+        assert "=== USER PROMPT ===" not in user
+
+    def test_roundtrip_with_real_prompts_only_output(self, tmp_path):
+        """Prompt saved by save_story(prompts_only=True) should parse cleanly."""
+        save_story(build_user_prompt(CHAPTER, GENRE, "A1/A2"), CHAPTER, GENRE, tmp_path, prompts_only=True)
+        txt_files = list(tmp_path.glob("*.txt"))
+        assert len(txt_files) == 1
+        sys_p, user_p = parse_prompt_file(txt_files[0])
+        assert "A1-1" in user_p
+        assert "Portuguese and Play" in sys_p
+
+
+# ---------------------------------------------------------------------------
+# 6. generate_from_file
+# ---------------------------------------------------------------------------
+
+class TestGenerateFromFile:
+    def test_calls_api_with_parsed_system_prompt(self, tmp_path):
+        txt = _make_txt_file(tmp_path, system="Custom system prompt.", user="Write something.")
+        client = _make_mock_client("RESULT")
+        generate_from_file(client, txt, tmp_path / "out")
+        assert client.messages.create.call_args.kwargs["system"] == "Custom system prompt."
+
+    def test_calls_api_with_parsed_user_prompt(self, tmp_path):
+        txt = _make_txt_file(tmp_path, user="Write something specific.")
+        client = _make_mock_client("RESULT")
+        generate_from_file(client, txt, tmp_path / "out")
+        messages = client.messages.create.call_args.kwargs["messages"]
+        assert "Write something specific." in messages[0]["content"]
+
+    def test_creates_md_file_in_output_dir(self, tmp_path):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        out_dir = tmp_path / "out"
+        generate_from_file(_make_mock_client("STORY"), txt, out_dir)
+        assert (out_dir / "A1-1_absurdist-comedy.md").exists()
+
+    def test_md_content_matches_api_response(self, tmp_path):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        out_dir = tmp_path / "out"
+        generate_from_file(_make_mock_client("THE STORY CONTENT"), txt, out_dir)
+        text = (out_dir / "A1-1_absurdist-comedy.md").read_text(encoding="utf-8")
+        assert "THE STORY CONTENT" in text
+
+    def test_creates_output_dir_if_missing(self, tmp_path):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        out_dir = tmp_path / "nested" / "new"
+        generate_from_file(_make_mock_client("STORY"), txt, out_dir)
+        assert out_dir.exists()
+
+    def test_uses_correct_model(self, tmp_path):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        client = _make_mock_client()
+        generate_from_file(client, txt, tmp_path / "out")
+        assert client.messages.create.call_args.kwargs["model"] == "claude-sonnet-4-6"
+
+
+# ---------------------------------------------------------------------------
+# 7. main / CLI — --from-file
+# ---------------------------------------------------------------------------
+
+class TestMainFromFile:
+    def test_from_file_calls_generate_from_file(self, tmp_path, capsys):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        with patch("generate_stories.generate_from_file") as mock_gen, \
+             patch("generate_stories.anthropic.Anthropic") as mock_anthropic, \
+             patch("sys.argv", ["prog", "--from-file", str(txt), "--output", str(tmp_path / "out")]):
+            mock_anthropic.return_value = _make_mock_client()
+            main()
+        capsys.readouterr()
+        mock_gen.assert_called_once()
+
+    def test_from_file_passes_correct_path(self, tmp_path, capsys):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        with patch("generate_stories.generate_from_file") as mock_gen, \
+             patch("generate_stories.anthropic.Anthropic") as mock_anthropic, \
+             patch("sys.argv", ["prog", "--from-file", str(txt), "--output", str(tmp_path / "out")]):
+            mock_anthropic.return_value = _make_mock_client()
+            main()
+        capsys.readouterr()
+        assert mock_gen.call_args.args[1] == txt
+
+    def test_from_file_missing_prints_warning(self, tmp_path, capsys):
+        with patch("sys.argv", ["prog", "--from-file", "/nonexistent/file.txt",
+                                "--output", str(tmp_path)]):
+            main()
+        out = capsys.readouterr().out
+        assert "not found" in out.lower() or "⚠" in out
+
+    def test_from_file_does_not_call_generate_story(self, tmp_path, capsys):
+        txt = _make_txt_file(tmp_path, user="Write something.")
+        with patch("generate_stories.generate_from_file"), \
+             patch("generate_stories.generate_story") as mock_story, \
+             patch("generate_stories.anthropic.Anthropic") as mock_anthropic, \
+             patch("sys.argv", ["prog", "--from-file", str(txt), "--output", str(tmp_path / "out")]):
+            mock_anthropic.return_value = _make_mock_client()
+            main()
+        capsys.readouterr()
+        mock_story.assert_not_called()
