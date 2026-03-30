@@ -98,6 +98,7 @@ Converts `.md` files in `./outputs/` to `.pdf`. No API key required.
 | `--chapter ID` | Single chapter |
 | `--prompts-dir DIR` | Where to read `.txt` files from — default: `./stories` |
 | `--output DIR` | Where to save `.md` files — default: `./outputs` |
+| `--finalised-dir DIR` | Where to move `.txt` files after successful generation — default: `./finalised_prompts` |
 | `--delay SECONDS` | Pause between API calls — default: `2.0` |
 
 ### `generate_story_pdf`
@@ -213,13 +214,17 @@ The project is split into focused modules:
 After a full run, `./stories/` and `./outputs/` will contain:
 
 ```
-stories/
+stories/                               ← edit .txt files freely before generating
 ├── INDEX.md
 ├── ALL_PROMPTS.md
-├── A1-1_absurdist-comedy.txt      ← edit these freely
+├── A1-1_absurdist-comedy.txt
 ├── A1-2_rom-com.txt
-├── ...
-└── B1-12_noir-crime-thriller.txt
+└── ...
+
+finalised_prompts/                     ← .txt files move here after successful generation
+├── A1-1_absurdist-comedy.txt
+├── A1-2_rom-com.txt
+└── ...
 
 outputs/
 ├── INDEX.md
@@ -227,7 +232,5 @@ outputs/
 ├── A1-1_absurdist-comedy.pdf
 ├── A1-2_rom-com.md
 ├── A1-2_rom-com.pdf
-├── ...
-├── B1-12_noir-crime-thriller.md
-└── B1-12_noir-crime-thriller.pdf
+└── ...
 ```

@@ -10,6 +10,7 @@ Three commands:
 
 import anthropic
 import argparse
+import shutil
 import time
 from pathlib import Path
 
@@ -90,12 +91,15 @@ def cmd_generate_story_md(args):
 
     prompts_dir = Path(args.prompts_dir)
     output_dir = Path(args.output)
+    finalised_dir = Path(args.finalised_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    finalised_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n🇵🇹 Portuguese and Play — generate_story_md")
-    print(f"   Chapters: {len(chapters_with_genres)}")
-    print(f"   Prompts:  {prompts_dir.resolve()}")
-    print(f"   Output:   {output_dir.resolve()}\n")
+    print(f"   Chapters:   {len(chapters_with_genres)}")
+    print(f"   Prompts:    {prompts_dir.resolve()}")
+    print(f"   Output:     {output_dir.resolve()}")
+    print(f"   Finalised:  {finalised_dir.resolve()}\n")
 
     client = anthropic.Anthropic()
     generated = []
@@ -115,6 +119,9 @@ def cmd_generate_story_md(args):
             content = generate_story_md(client, txt_path)
             filepath = save_story(content, chapter, genre, output_dir)
             generated.append(filepath)
+
+            shutil.move(str(txt_path), str(finalised_dir / txt_path.name))
+            print(f"  ✓ Prompt → {finalised_dir / txt_path.name}")
 
             if i < len(chapters_with_genres) - 1:
                 time.sleep(args.delay)
@@ -164,6 +171,7 @@ def main():
     p2.add_argument("--chapter", help="Single chapter ID (e.g. A1-1)")
     p2.add_argument("--prompts-dir", default="./stories", help="Where to read .txt files from (default: ./stories)")
     p2.add_argument("--output", default="./outputs", help="Where to save .md files (default: ./outputs)")
+    p2.add_argument("--finalised-dir", default="./finalised_prompts", help="Where to move .txt files after successful generation (default: ./finalised_prompts)")
     p2.add_argument("--delay", type=float, default=2.0, help="Seconds between API calls (default: 2.0)")
 
     # generate_story_pdf

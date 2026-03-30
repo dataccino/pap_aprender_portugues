@@ -464,30 +464,70 @@ class TestCmdGenerateStoryMd:
             user_prompt = build_user_prompt(chapter, genre, level)
             save_prompt(user_prompt, chapter, genre, prompts_dir)
 
+    def _argv_md(self, prompts_dir, output_dir, finalised_dir, extra=None):
+        argv = ["cli.py", "generate_story_md",
+                "--prompts-dir", str(prompts_dir),
+                "--output", str(output_dir),
+                "--finalised-dir", str(finalised_dir)]
+        if extra:
+            argv += extra
+        return argv
+
     def test_creates_md_file_for_each_chapter(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         output_dir = tmp_path / "outputs"
-        chapters = _resolve_chapters("a1a2")[:2]
+        finalised_dir = tmp_path / "finalised"
+        chapters = _resolve_chapters("a1a2")[:1]
         self._make_prompts(prompts_dir, chapters)
         with patch("cli.anthropic") as mock_cli_a, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--book", "a1a2", "--chapter", chapters[0][1]["id"],
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", chapters[0][1]["id"]])):
             mock_cli_a.Anthropic.return_value = _make_mock_client("STORY")
             main()
         capsys.readouterr()
         assert len(list(output_dir.glob("*.md"))) >= 1
 
+    def test_prompt_moved_to_finalised_dir_after_success(self, tmp_path, capsys):
+        prompts_dir = tmp_path / "stories"
+        output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
+        chapters = _resolve_chapters("both", "A1-1")
+        self._make_prompts(prompts_dir, chapters)
+        txt_name = "A1-1_absurdist-comedy.txt"
+        with patch("cli.anthropic") as mock_anthropic, \
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", "A1-1"])):
+            mock_anthropic.Anthropic.return_value = _make_mock_client("STORY")
+            main()
+        capsys.readouterr()
+        assert not (prompts_dir / txt_name).exists()
+        assert (finalised_dir / txt_name).exists()
+
+    def test_prompt_not_moved_on_error(self, tmp_path, capsys):
+        prompts_dir = tmp_path / "stories"
+        output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
+        chapters = _resolve_chapters("both", "A1-1")
+        self._make_prompts(prompts_dir, chapters)
+        txt_name = "A1-1_absurdist-comedy.txt"
+        with patch("cli.anthropic") as mock_anthropic, \
+             patch("cli.generate_story_md", side_effect=RuntimeError("API error")), \
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", "A1-1"])):
+            mock_anthropic.Anthropic.return_value = _make_mock_client()
+            main()
+        capsys.readouterr()
+        assert (prompts_dir / txt_name).exists()
+        assert not (finalised_dir / txt_name).exists()
+
     def test_warns_when_prompt_file_missing(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         prompts_dir.mkdir()
         output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
         with patch("cli.anthropic") as mock_anthropic, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--chapter", "A1-1",
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", "A1-1"])):
             mock_anthropic.Anthropic.return_value = _make_mock_client()
             main()
         out = capsys.readouterr().out
@@ -496,13 +536,12 @@ class TestCmdGenerateStoryMd:
     def test_creates_index_md(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
         chapters = _resolve_chapters("both", "A1-1")
         self._make_prompts(prompts_dir, chapters)
         with patch("cli.anthropic") as mock_anthropic, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--chapter", "A1-1",
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", "A1-1"])):
             mock_anthropic.Anthropic.return_value = _make_mock_client("STORY")
             main()
         capsys.readouterr()
@@ -511,13 +550,12 @@ class TestCmdGenerateStoryMd:
     def test_index_links_use_md_extension(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
         chapters = _resolve_chapters("both", "A1-1")
         self._make_prompts(prompts_dir, chapters)
         with patch("cli.anthropic") as mock_anthropic, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--chapter", "A1-1",
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--chapter", "A1-1"])):
             mock_anthropic.Anthropic.return_value = _make_mock_client("STORY")
             main()
         capsys.readouterr()
@@ -527,14 +565,13 @@ class TestCmdGenerateStoryMd:
     def test_sleeps_between_chapters_not_after_last(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
         chapters = _resolve_chapters("a1a2")
         self._make_prompts(prompts_dir, chapters)
         with patch("cli.anthropic") as mock_anthropic, \
              patch("cli.time.sleep") as mock_sleep, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--book", "a1a2",
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--book", "a1a2"])):
             mock_anthropic.Anthropic.return_value = _make_mock_client()
             main()
         capsys.readouterr()
@@ -543,14 +580,13 @@ class TestCmdGenerateStoryMd:
     def test_respects_delay_argument(self, tmp_path, capsys):
         prompts_dir = tmp_path / "stories"
         output_dir = tmp_path / "outputs"
+        finalised_dir = tmp_path / "finalised"
         chapters = _resolve_chapters("a1a2")
         self._make_prompts(prompts_dir, chapters)
         with patch("cli.anthropic") as mock_anthropic, \
              patch("cli.time.sleep") as mock_sleep, \
-             patch("sys.argv", ["cli.py", "generate_story_md",
-                                "--book", "a1a2", "--delay", "0.5",
-                                "--prompts-dir", str(prompts_dir),
-                                "--output", str(output_dir)]):
+             patch("sys.argv", self._argv_md(prompts_dir, output_dir, finalised_dir,
+                                             ["--book", "a1a2", "--delay", "0.5"])):
             mock_anthropic.Anthropic.return_value = _make_mock_client()
             main()
         capsys.readouterr()
@@ -561,7 +597,8 @@ class TestCmdGenerateStoryMd:
         with patch("sys.argv", ["cli.py", "generate_story_md",
                                 "--chapter", "X99-99",
                                 "--prompts-dir", str(tmp_path),
-                                "--output", str(tmp_path)]):
+                                "--output", str(tmp_path),
+                                "--finalised-dir", str(tmp_path)]):
             main()
         out = capsys.readouterr().out
         assert "not found" in out.lower() or "X99-99" in out
