@@ -1,6 +1,6 @@
 # Portuguese and Play — Story Generator
 
-A CLI tool that generates bilingual (PT/EN) short stories for each chapter of your A1/A2 and B1 European Portuguese textbooks. Each story targets the chapter's grammar structures, is written in a specific literary genre, and outputs a formatted PDF plus structured markdown with a full Portuguese version, English version, line-by-line interleaved translation, grammar notes, and vocabulary and verb conjugation tables.
+A CLI tool that generates bilingual (PT/EN) short stories for each chapter of your A1/A2 and B1 European Portuguese textbooks. Each story targets the chapter's grammar structures, is written in a specific literary genre, and outputs structured markdown with a bilingual sentence-by-sentence layout, grammar notes, vocabulary tables, and verb conjugation tables. Stories can also be exported to PDF.
 
 ---
 
@@ -14,7 +14,7 @@ A CLI tool that generates bilingual (PT/EN) short stories for each chapter of yo
 pip install -r requirements.txt
 ```
 
-**Set your API key** (only needed if you're generating stories via the API — not required for `--prompts-only`):
+**Set your API key** (only needed for `generate_story_md` — not required for the other commands):
 
 ```bash
 export ANTHROPIC_API_KEY="your-key-here"
@@ -24,49 +24,92 @@ Add that line to your `~/.zshrc` or `~/.bashrc` to avoid setting it every sessio
 
 ---
 
-## Quickstart
+## Workflow
 
-### Generate all stories (calls the API)
+The tool works in three explicit steps. Run them in order the first time; after that you can re-run any step independently.
 
-```bash
-python3 generate_stories.py
-```
-
-This generates 27 stories — 14 for A1/A2, 13 for B1 — and saves them as markdown and PDF files in `./outputs/`.
-
-### Just export the prompts (no API key needed)
+### Step 1 — Generate prompt files (run once, then edit freely)
 
 ```bash
-python3 generate_stories.py --prompts-only
+python3 cli.py generate_story_prompts
+python3 cli.py generate_story_prompts --chapter A1-1   # single chapter
+python3 cli.py generate_story_prompts --book a1a2      # one book only
 ```
 
-Saves each story prompt as a `.txt` file, plus a single `ALL_PROMPTS.md` with every prompt in sequence. Use this to paste prompts manually into Claude.ai, ChatGPT, or any other LLM.
+Saves a `.txt` file per chapter to `./stories/`. Each file contains the system prompt and the user prompt. **Edit these files freely** — the next step always reads from them, so your edits are preserved.
+
+### Step 2 — Generate story markdown (calls the API)
+
+```bash
+python3 cli.py generate_story_md
+python3 cli.py generate_story_md --chapter A1-1
+python3 cli.py generate_story_md --book b1
+```
+
+Reads `.txt` files from `./stories/`, calls the Claude API, and saves `.md` story files to `./outputs/`. Warns if a prompt file is missing (run Step 1 first).
+
+### Step 3 — Generate PDFs (no API call)
+
+```bash
+python3 cli.py generate_story_pdf
+python3 cli.py generate_story_pdf --chapter A1-1
+```
+
+Converts `.md` files in `./outputs/` to `.pdf`. No API key required.
 
 ---
 
 ## All Options
 
+### `generate_story_prompts`
+
 | Flag | Description |
 |------|-------------|
-| `--book a1a2` | Only generate A1/A2 chapters (book 1) |
-| `--book b1` | Only generate B1 chapters (book 2) |
-| `--book both` | Both books — this is the default |
-| `--chapter ID` | Generate a single chapter, e.g. `--chapter A1-1` |
-| `--prompts-only` | Save prompts as `.txt` files, no API calls |
-| `--dry-run` | Print prompts to the terminal, no files saved, no API calls |
-| `--pdf` | Generate a PDF alongside each markdown file |
-| `--pdf-only` | Build PDFs from existing markdown files — no API calls |
-| `--inspire "TEXT"` | Provide a plot seed or inspiration for the story (see below) |
-| `--inspire-file FILE` | Same as `--inspire` but reads from a text file |
-| `--from-file FILE` | Generate a story from an edited `.txt` prompt file (see below) |
-| `--output DIR` | Output directory — defaults to `./outputs` |
-| `--delay SECONDS` | Pause between API calls — defaults to `2.0` |
+| `--book a1a2\|b1\|both` | Which book(s) to generate prompts for — default: `both` |
+| `--chapter ID` | Single chapter, e.g. `--chapter A1-1` |
+| `--inspire "TEXT"` | Optional plot seed baked into the prompt |
+| `--inspire-file FILE` | Read inspiration from a file instead |
+| `--prompts-dir DIR` | Where to save `.txt` files — default: `./stories` |
+
+### `generate_story_md`
+
+| Flag | Description |
+|------|-------------|
+| `--book a1a2\|b1\|both` | Which book(s) to generate — default: `both` |
+| `--chapter ID` | Single chapter |
+| `--prompts-dir DIR` | Where to read `.txt` files from — default: `./stories` |
+| `--output DIR` | Where to save `.md` files — default: `./outputs` |
+| `--delay SECONDS` | Pause between API calls — default: `2.0` |
+
+### `generate_story_pdf`
+
+| Flag | Description |
+|------|-------------|
+| `--chapter ID` | Single chapter |
+| `--output DIR` | Where to read `.md` and save `.pdf` files — default: `./outputs` |
+
+---
+
+## Adding Story Inspiration
+
+Use `--inspire` to give a story a plot seed, character idea, or setting. It gets baked directly into the `.txt` prompt file.
+
+**Inline:**
+```bash
+python3 cli.py generate_story_prompts --chapter A1-1 \
+  --inspire "A woman tries to introduce herself at a party but keeps being interrupted by a fado singer."
+```
+
+**From a file** (better for longer plot notes):
+```bash
+python3 cli.py generate_story_prompts --chapter B1-5 --inspire-file my_plot.txt
+```
+
+> **Note:** If you use `--inspire` without `--chapter`, the same inspiration is applied to every chapter. The script will warn you when this happens.
 
 ---
 
 ## Chapter IDs
-
-Use these with `--chapter`:
 
 **A1/A2 (Book 1)**
 
@@ -124,102 +167,48 @@ Genres cycle across chapters in this order, repeating as needed:
 
 ## Story Output Format
 
-Each generated story produces a `.md` and a `.pdf` file. The content contains:
+Each generated story produces a `.md` file (and optionally a `.pdf`). The content contains:
 
-- **🔀 Bilingual Story** — every sentence as an EN/PT pair, English first then Portuguese beneath
-- **📚 Grammar Notes** — each target grammar structure with an example sentence pulled directly from the story
-- **📖 Vocabulary** — key nouns/phrases table, plus a full conjugation table (Present / Past / Future × 6 persons) for each key verb
-
----
-
-## Adding Story Inspiration
-
-Use `--inspire` to give the story a plot seed, character idea, or setting. This is optional and works best when generating a single chapter.
-
-**Inline:**
-```bash
-python3 generate_stories.py --chapter A1-1 \
-  --inspire "A woman tries to introduce herself at a party but keeps being interrupted by a fado singer."
-```
-
-**From a file** (better for longer plot notes):
-```bash
-python3 generate_stories.py --chapter B1-5 --inspire-file my_plot.txt
-```
-
-The inspiration is passed to the model as a starting point, not a strict constraint — it will adapt the idea to fit the genre and grammar targets.
-
-> **Note:** If you use `--inspire` without `--chapter`, the same inspiration will be applied to every chapter. The script will warn you when this happens.
+- **Bilingual Story** — every sentence as an EN/PT pair, English first then Portuguese beneath
+- **Grammar Notes** — each target grammar structure with an example sentence pulled directly from the story
+- **Vocabulary** — key nouns/phrases table, plus a full conjugation table (Present / Past / Future × 6 persons) for each key verb
 
 ---
 
-## Editing and Regenerating a Story
+## Module Structure
 
-If you want to tweak the prompt for a specific story before generating it, use `--prompts-only` to save the prompt as a `.txt` file, edit it, then pass it back with `--from-file`.
+The project is split into focused modules:
 
-**Step 1 — Save the prompt:**
-```bash
-python3 generate_stories.py --chapter A1-1 --prompts-only
-# writes stories/A1-1_absurdist-comedy.txt
-```
-
-**Step 2 — Edit the `.txt` file directly** (change the genre guidance, add constraints, etc.)
-
-**Step 3 — Regenerate from the edited file:**
-```bash
-python3 generate_stories.py --from-file stories/A1-1_absurdist-comedy.txt
-```
-
-The output `.md` is saved with the same stem as the `.txt` file into `--output` (default `./outputs`). Add `--pdf` to also generate a PDF.
-
-> **Note:** `--from-file` bypasses chapter data entirely — exactly what's in the file is sent to the model.
-
----
-
-## Typical Weekend Workflow
-
-**Step 1 — Export all prompts (no API key needed):**
-```bash
-python3 generate_stories.py --prompts-only
-```
-
-**Step 2 — Open `./outputs/ALL_PROMPTS.md`**
-
-Copy the system prompt once into your LLM of choice, then paste each chapter's user prompt one by one, saving the responses as `.md` files.
-
-**Step 3 — Or let the script call the API for you:**
-```bash
-python3 generate_stories.py
-```
-
-If you hit rate limits, increase the delay between calls:
-```bash
-python3 generate_stories.py --delay 5.0
-```
-
-**Step 4 — Preview a single chapter before committing to a full run:**
-```bash
-python3 generate_stories.py --chapter A1-1 --dry-run
-```
+| Module | Responsibility | Key functions |
+|--------|---------------|---------------|
+| `curriculum.py` | All static textbook data | `A1A2_CHAPTERS`, `B1_CHAPTERS`, `GENRES` — chapter definitions, grammar targets, objectives, and genre cycling order |
+| `prompts.py` | Prompt building and parsing | `SYSTEM_PROMPT` — the constant sent to Claude on every call; `build_user_prompt()` — assembles the user prompt from chapter/genre/inspiration data; `parse_prompt_file()` — reads a `.txt` file back into `(system_prompt, user_prompt)` |
+| `api_client.py` | Anthropic API calls | `generate_story_md()` — reads a `.txt` prompt file, calls the Claude API, and returns the story content as a string |
+| `output.py` | All file I/O for writing | `save_prompt()` — writes a prompt to a `.txt` file in `stories/`; `save_story()` — writes story content to a `.md` file with YAML frontmatter; `build_pdf()` — converts markdown to PDF via weasyprint; `build_pdfs_from_dir()` — batch PDF generation from a directory; `write_index()` — writes `INDEX.md`; `write_all_prompts()` — writes `ALL_PROMPTS.md` |
+| `cli.py` | CLI entry point | `main()` — parses subcommands and routes to `cmd_generate_story_prompts()`, `cmd_generate_story_md()`, or `cmd_generate_story_pdf()` |
 
 ---
 
 ## Output Files
 
-After a full run, `./outputs/` will contain:
+After a full run, `./stories/` and `./outputs/` will contain:
 
 ```
+stories/
+├── INDEX.md
+├── ALL_PROMPTS.md
+├── A1-1_absurdist-comedy.txt      ← edit these freely
+├── A1-2_rom-com.txt
+├── ...
+└── B1-12_noir-crime-thriller.txt
+
 outputs/
-├── INDEX.md                          # table of all chapters, genres, and filenames
+├── INDEX.md
 ├── A1-1_absurdist-comedy.md
 ├── A1-1_absurdist-comedy.pdf
 ├── A1-2_rom-com.md
 ├── A1-2_rom-com.pdf
-├── A1-3_magical-realism.md
-├── A1-3_magical-realism.pdf
 ├── ...
 ├── B1-12_noir-crime-thriller.md
 └── B1-12_noir-crime-thriller.pdf
 ```
-
-In `--prompts-only` mode, files are `.txt` instead of `.md`, an additional `ALL_PROMPTS.md` is written, and no PDFs are generated.
