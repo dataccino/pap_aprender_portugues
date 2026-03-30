@@ -38,7 +38,11 @@ python3 cli.py generate_story_prompts --book a1a2      # one book only
 
 Saves a `.txt` file per chapter to `./stories/`. Each file contains the system prompt and the user prompt. **Edit these files freely** — the next step always reads from them, so your edits are preserved.
 
-### Step 2 — Generate story markdown (calls the API)
+### Step 2 — Generate story markdown
+
+There are two ways to do this — choose whichever suits the session:
+
+#### Option A: Via the Anthropic API (unattended)
 
 ```bash
 python3 cli.py generate_story_md
@@ -46,7 +50,22 @@ python3 cli.py generate_story_md --chapter A1-1
 python3 cli.py generate_story_md --book b1
 ```
 
-Reads `.txt` files from `./stories/`, calls the Claude API, and saves `.md` story files to `./outputs/`. Warns if a prompt file is missing (run Step 1 first).
+Reads `.txt` files from `./stories/`, calls the Claude API, and saves `.md` story files to `./outputs/`. Requires `ANTHROPIC_API_KEY`. Warns if a prompt file is missing (run Step 1 first).
+
+#### Option B: Via Claude Code CLI (interactive, no API key needed)
+
+If you have [Claude Code](https://claude.ai/code) installed, you can ask Claude to generate stories directly in your terminal without calling the API yourself. Claude reads the `.txt` prompt files, generates the story, and writes the `.md` file — no API key or script invocation required.
+
+**Generate a single story:**
+> "Please generate the story for A1-1 using the prompt in `stories/A1-1_absurdist-comedy.txt` and save it to `outputs/`"
+
+**Generate multiple stories:**
+> "Please generate stories for all A1/A2 chapters using the prompt files in `stories/` and save them to `outputs/`"
+
+**After editing a prompt:**
+> "I've edited `stories/B1-3_magical-realism.txt` — please regenerate the story and save it to `outputs/`"
+
+Claude reads the prompt file directly, generates the content, and writes the `.md` file using the same format as the API path. You can then run `generate_story_pdf` as normal to produce the PDF.
 
 ### Step 3 — Generate PDFs (no API call)
 
