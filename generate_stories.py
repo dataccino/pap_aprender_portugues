@@ -923,6 +923,7 @@ def main():
             print(f" ✗ ERROR: {e}")
             errors.append((chapter["id"], str(e)))
 
+
     if prompts_only:
         all_prompts_path = output_dir / "ALL_PROMPTS.md"
         with open(all_prompts_path, "w", encoding="utf-8") as f:
